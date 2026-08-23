@@ -44,8 +44,9 @@
     <div class="date">{{ date }}</div>
   </header>
 
-  <h2>📰 今日新闻 News Digest</h2>
-  {% for n in news %}
+  {% for sec in news_sections %}
+  <h2>{{ sec.icon }} {{ sec.title }}</h2>
+  {% for n in sec.entries %}
   <div class="card">
     <h3>{{ n.title }}</h3>
     <div class="src">{{ n.source_name }} · {{ n.published }} · <a href="{{ n.url }}">原文 ↗</a></div>
@@ -57,6 +58,7 @@
     <p class="en">{{ n.content[:300] }}…</p>
     {% endif %}
   </div>
+  {% endfor %}
   {% endfor %}
 
   <h2>📚 每日知识 Knowledge of the Day</h2>

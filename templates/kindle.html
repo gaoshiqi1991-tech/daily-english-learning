@@ -26,12 +26,14 @@
 <h1>每日外刊英语学习</h1>
 <p class="date">{{ date }}</p>
 <p class="nav">
-  <a href="#news">新闻</a> · <a href="#kb">每日知识</a> · <a href="#vocab">今日词汇</a>
+  {% for sec in news_sections %}<a href="#sec{{ loop.index }}">{{ sec.key }}</a> · {% endfor %}<a href="#kb">每日知识</a> · <a href="#vocab">今日词汇</a>
   {% if archive_links %} · 归档: {% for a in archive_links %}<a href="archive/{{ a }}.html">{{ a.replace('kindle-', '')[5:] }}</a> {% endfor %}{% endif %}
 </p>
 
-<h2 id="news">一、今日新闻 News Digest</h2>
-{% for n in news %}
+{% set nums = ['一','二','三','四','五','六','七','八'] %}
+{% for sec in news_sections %}
+<h2 id="sec{{ loop.index }}">{{ nums[loop.index0] }}、{{ sec.title }}</h2>
+{% for n in sec.entries %}
 <div class="item">
   <h3>{{ loop.index }}. {{ n.title }}</h3>
   <p class="src">{{ n.source_name }} · {{ n.published }}</p>
@@ -44,9 +46,10 @@
   {% endif %}
 </div>
 {% endfor %}
-
 <hr>
-<h2 id="kb">二、每日知识 Knowledge of the Day</h2>
+{% endfor %}
+
+<h2 id="kb">{{ nums[news_sections|length] }}、每日知识 Knowledge of the Day</h2>
 {% for it in kb_items %}
 <div class="item">
   <h3>{{ loop.index }}. {{ it.title }}</h3>
@@ -59,7 +62,7 @@
 {% endfor %}
 
 <hr>
-<h2 id="vocab">三、今日词汇 Vocabulary of the Day</h2>
+<h2 id="vocab">{{ nums[news_sections|length + 1] }}、今日词汇 Vocabulary of the Day</h2>
 {% for v in vocab %}
 <div class="item">
   <p><span class="word">{{ loop.index }}. {{ v.word }}</span> {{ v.phonetic }} <i>{{ v.pos }}</i></p>
