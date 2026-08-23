@@ -1,0 +1,48 @@
+# ===== 全局配置 =====
+
+# OpenAI 设置（API Key 从环境变量 OPENAI_API_KEY 读取）
+openai:
+  model: "gpt-4o-mini"          # 摘要与词汇生成用模型
+  base_url: null                # 如用代理/兼容接口，填 "https://your-proxy/v1"
+  temperature: 0.4
+
+# 每日新闻 RSS 源（权威外刊）
+news_feeds:
+  - name: "BBC World"
+    url: "https://feeds.bbci.co.uk/news/world/rss.xml"
+  - name: "The Guardian World"
+    url: "https://www.theguardian.com/world/rss"
+  - name: "NPR Top Stories"
+    url: "https://feeds.npr.org/1001/rss.xml"
+  - name: "NYT Home Page"
+    url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+
+# 知识库一：最新新闻资讯 / 科学报刊（每周刷新）
+kb_feeds:
+  - name: "BBC Science & Environment"
+    url: "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml"
+  - name: "The Guardian Science"
+    url: "https://www.theguardian.com/science/rss"
+  - name: "ScienceDaily Top"
+    url: "https://www.sciencedaily.com/rss/top/science.xml"
+  - name: "Nature News"
+    url: "https://www.nature.com/nature.rss"
+  - name: "Scientific American"
+    url: "https://www.scientificamerican.com/feed/"
+
+# 每日抓取与生成参数
+pipeline:
+  news_items_per_feed: 3        # 每个 RSS 源取前几条
+  news_max_total: 10            # 每日新闻摘要总条数
+  kb_items_per_day: 3           # 每日随机知识条数
+  vocab_count: 3                # 今日词汇单词数
+  kb_max_entries: 200           # 新闻知识库最大保留条数（滚动淘汰）
+  request_timeout: 20           # HTTP 请求超时（秒）
+
+# 路径
+paths:
+  data_dir: "data"
+  kb_news_file: "data/kb_news.json"
+  kb_books_dir: "data/books"        # 书本知识库：放置你的读书笔记 .md 文件
+  output_dir: "output"
+  template_file: "templates/page.html"

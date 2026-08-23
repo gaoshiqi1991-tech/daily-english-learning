@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+# 密钥
+.env
+# 生成的页面（GitHub Actions 上重新生成，不入库）
+output/
+# 测试数据
+data/kb_news.json
