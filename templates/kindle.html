@@ -52,6 +52,9 @@
   <h3>{{ loop.index }}. {{ it.title }}</h3>
   <p class="src">[{{ "新闻/科学" if it.source == "news" else "书本" }}] {{ it.source_name }}</p>
   <p>{{ it.content }}</p>
+  {% if it.content_cn %}
+  <p class="cn">{{ it.content_cn }}</p>
+  {% endif %}
 </div>
 {% endfor %}
 

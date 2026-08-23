@@ -68,6 +68,9 @@
       {{ it.source_name }}{% if it.url %} · <a href="{{ it.url }}">原文 ↗</a>{% endif %}
     </div>
     <p class="en">{{ it.content }}</p>
+    {% if it.content_cn %}
+    <p class="cn">{{ it.content_cn }}</p>
+    {% endif %}
   </div>
   {% endfor %}
 
