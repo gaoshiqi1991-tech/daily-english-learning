@@ -10,12 +10,15 @@ from openai import OpenAI
 
 class AIClient:
     def __init__(self, openai_cfg: dict):
-        kwargs = {"api_key": os.environ["OPENAI_API_KEY"]}
-        if openai_cfg.get("base_url"):
-            kwargs["base_url"] = openai_cfg["base_url"]
+        kwargs = {"api_key": os.environ["OPENAI_API_KEY"],
+                  "timeout": 60, "max_retries": 2}
+        base_url = openai_cfg.get("base_url") or os.environ.get("OPENAI_BASE_URL")
+        if base_url:
+            kwargs["base_url"] = base_url
         self.client = OpenAI(**kwargs)
         self.model = openai_cfg.get("model", "gpt-4o-mini")
         self.temperature = openai_cfg.get("temperature", 0.4)
+        print(f"[ai] 使用模型 {self.model}, 接口 {base_url or 'https://api.openai.com (默认)'}")
 
     def _chat(self, system: str, user: str, json_mode: bool = False) -> str:
         kwargs = {}
