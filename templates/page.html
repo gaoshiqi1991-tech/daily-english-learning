@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日外刊英语 · {{ date }}</title>
+<style>
+  :root { --ink:#1f2933; --accent:#2b6cb0; --bg:#f7f5f0; --card:#ffffff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Georgia", "Songti SC", "SimSun", serif; background: var(--bg);
+         color: var(--ink); line-height: 1.7; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header { border-bottom: 3px double var(--ink); padding-bottom: 16px; margin-bottom: 32px; }
+  header h1 { font-size: 2rem; letter-spacing: 1px; }
+  header .date { color: #6b7280; font-style: italic; margin-top: 4px; }
+  h2 { font-size: 1.3rem; margin: 40px 0 16px; padding-left: 12px;
+       border-left: 5px solid var(--accent); }
+  .card { background: var(--card); border: 1px solid #e5e2da; border-radius: 10px;
+          padding: 20px 22px; margin-bottom: 16px;
+          box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .src { font-size: .8rem; color: #6b7280; margin-bottom: 10px; }
+  .src a { color: var(--accent); text-decoration: none; }
+  .en { margin-bottom: 8px; }
+  .cn { color: #4b5563; font-size: .95rem; }
+  .kw { margin-top: 10px; }
+  .kw span { display: inline-block; background: #eef2f7; color: #2b6cb0;
+             border-radius: 999px; padding: 2px 10px; font-size: .78rem; margin: 2px 4px 0 0; }
+  .kb-tag { display:inline-block; font-size:.75rem; border:1px solid #d1d5db;
+            border-radius:4px; padding:0 6px; margin-right:6px; color:#6b7280; }
+  .vocab .word { font-size: 1.4rem; font-weight: bold; color: var(--accent); }
+  .vocab .phonetic { color: #6b7280; margin-left: 8px; font-size: .95rem; }
+  .vocab .pos { font-style: italic; color: #6b7280; margin-left: 6px; }
+  .vocab .def { margin-top: 6px; }
+  .vocab .eg { margin-top: 8px; padding: 10px 14px; background: #f3f4f6;
+               border-radius: 8px; }
+  footer { margin-top: 48px; text-align: center; color: #9ca3af; font-size: .8rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>每日外刊英语学习</h1>
+    <div class="date">{{ date }}</div>
+  </header>
+
+  <h2>📰 今日新闻 News Digest</h2>
+  {% for n in news %}
+  <div class="card">
+    <h3>{{ n.title }}</h3>
+    <div class="src">{{ n.source_name }} · {{ n.published }} · <a href="{{ n.url }}">原文 ↗</a></div>
+    {% if n.summary %}
+    <p class="en">{{ n.summary.summary_en }}</p>
+    <p class="cn">{{ n.summary.summary_cn }}</p>
+    <div class="kw">{% for k in n.summary.keywords %}<span>{{ k }}</span>{% endfor %}</div>
+    {% else %}
+    <p class="en">{{ n.content[:300] }}…</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <h2>📚 每日知识 Knowledge of the Day</h2>
+  {% for it in kb_items %}
+  <div class="card">
+    <h3>{{ it.title }}</h3>
+    <div class="src">
+      <span class="kb-tag">{{ "新闻/科学" if it.source == "news" else "书本" }}</span>
+      {{ it.source_name }}{% if it.url %} · <a href="{{ it.url }}">原文 ↗</a>{% endif %}
+    </div>
+    <p class="en">{{ it.content }}</p>
+  </div>
+  {% endfor %}
+
+  <h2>📝 今日词汇 Vocabulary of the Day</h2>
+  {% for v in vocab %}
+  <div class="card vocab">
+    <span class="word">{{ v.word }}</span>
+    <span class="phonetic">{{ v.phonetic }}</span>
+    <span class="pos">{{ v.pos }}</span>
+    <p class="def en">{{ v.meaning_en }}</p>
+    <p class="def cn">{{ v.meaning_cn }}</p>
+    <div class="eg">
+      <p class="en">{{ v.example }}</p>
+      <p class="cn">{{ v.example_cn }}</p>
+    </div>
+  </div>
+  {% endfor %}
+
+  <footer>Generated {{ generated_at }} · Daily English Learning · <a href="kindle.html" style="color:#9ca3af">Kindle 版</a></footer>
+</div>
+</body>
+</html>
