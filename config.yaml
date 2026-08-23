@@ -6,20 +6,35 @@ openai:
   base_url: null                # null 时读取环境变量 OPENAI_BASE_URL（如 https://api.deepseek.com/v1）
   temperature: 0.4
 
-# 每日新闻 RSS 源（经济 + 健康，权威外刊）
+# 每日新闻 RSS 源（按板块分类：经济 / 健康 / 科技，权威外刊）
 news_feeds:
+  # --- 经济 ---
   - name: "BBC Business"
     url: "https://feeds.bbci.co.uk/news/business/rss.xml"
-  - name: "BBC Health"
-    url: "https://feeds.bbci.co.uk/news/health/rss.xml"
+    category: "经济"
   - name: "The Guardian Business"
     url: "https://www.theguardian.com/uk/business/rss"
+    category: "经济"
+  # --- 健康 ---
+  - name: "BBC Health"
+    url: "https://feeds.bbci.co.uk/news/health/rss.xml"
+    category: "健康"
   - name: "The Guardian Health"
     url: "https://www.theguardian.com/society/health/rss"
-  - name: "NYT Business"
-    url: "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml"
+    category: "健康"
   - name: "NPR Health"
     url: "https://feeds.npr.org/1128/rss.xml"
+    category: "健康"
+  # --- 科技 ---
+  - name: "BBC Technology"
+    url: "https://feeds.bbci.co.uk/news/technology/rss.xml"
+    category: "科技"
+  - name: "The Guardian Technology"
+    url: "https://www.theguardian.com/uk/technology/rss"
+    category: "科技"
+  - name: "NYT Technology"
+    url: "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml"
+    category: "科技"
 
 # 知识库一：最新新闻资讯 / 科学报刊（每周刷新）
 kb_feeds:
@@ -36,8 +51,8 @@ kb_feeds:
 
 # 每日抓取与生成参数
 pipeline:
-  news_items_per_feed: 3        # 每个 RSS 源取前几条
-  news_max_total: 10            # 每日新闻摘要总条数
+  news_items_per_feed: 2        # 每个 RSS 源取前几条
+  news_max_total: 16            # 每日新闻摘要总条数（上限）
   kb_items_per_day: 3           # 每日随机知识条数
   vocab_count: 3                # 今日词汇单词数
   kb_max_entries: 200           # 新闻知识库最大保留条数（滚动淘汰）
