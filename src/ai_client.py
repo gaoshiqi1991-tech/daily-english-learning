@@ -16,7 +16,7 @@ class AIClient:
         if base_url:
             kwargs["base_url"] = base_url
         self.client = OpenAI(**kwargs)
-        self.model = openai_cfg.get("model", "gpt-4o-mini")
+        self.model = os.environ.get("OPENAI_MODEL") or openai_cfg.get("model", "gpt-4o-mini")
         self.temperature = openai_cfg.get("temperature", 0.4)
         print(f"[ai] 使用模型 {self.model}, 接口 {base_url or 'https://api.openai.com (默认)'}")
 

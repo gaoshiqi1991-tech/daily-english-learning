@@ -27,7 +27,7 @@
 <p class="date">{{ date }}</p>
 <p class="nav">
   <a href="#news">新闻</a> · <a href="#kb">每日知识</a> · <a href="#vocab">今日词汇</a>
-  {% if archive_links %} · 归档: {% for a in archive_links %}<a href="archive/{{ a }}.html">{{ a[5:] }}</a> {% endfor %}{% endif %}
+  {% if archive_links %} · 归档: {% for a in archive_links %}<a href="archive/{{ a }}.html">{{ a.replace('kindle-', '')[5:] }}</a> {% endfor %}{% endif %}
 </p>
 
 <h2 id="news">一、今日新闻 News Digest</h2>
