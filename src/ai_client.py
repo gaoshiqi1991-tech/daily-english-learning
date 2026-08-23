@@ -1,4 +1,4 @@
-"""OpenAI 调用封装：新闻摘要、知识摘要、今日词汇生成。"""
+"""OpenAI 调用封装：新闻摘要、知识摘要、知识翻译、今日词汇生成。"""
 
 from __future__ import annotations
 
@@ -32,6 +32,18 @@ class AIClient:
             **kwargs,
         )
         return resp.choices[0].message.content.strip()
+
+    def translate_cn(self, text: str) -> str | None:
+        """英译中：给知识条目配中文翻译。"""
+        try:
+            return self._chat(
+                "You are a professional English-to-Chinese translator.",
+                f"Translate the following English text into fluent, natural "
+                f"Simplified Chinese. Output ONLY the translation, nothing else.\n\n"
+                f"{text[:2500]}")
+        except Exception as exc:
+            print(f"[ai] translate_cn 失败: {exc}")
+            return None
 
     def summarize_news(self, title: str, content: str) -> dict | None:
         """每日新闻摘要：英文摘要 + 中文要点。返回 dict 或 None。"""
