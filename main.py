@@ -35,7 +35,7 @@ def run(target_date: str | None = None, use_ai: bool = True) -> Path:
         else:
             print("[main] 警告: 未检测到 OPENAI_API_KEY，降级为无 AI 模式")
 
-    # 1. 抓取每日新闻 + AI 摘要
+    # 1. 抓取每日新闻 + AI 摘要，按板块分组
     print(f"[main] 抓取新闻 RSS ...")
     news = fetch_daily_news(cfg["news_feeds"], pipe["news_items_per_feed"],
                             pipe["news_max_total"], pipe["request_timeout"])
@@ -43,6 +43,15 @@ def run(target_date: str | None = None, use_ai: bool = True) -> Path:
     if ai:
         for n in news:
             n["summary"] = ai.summarize_news(n["title"], n["content"])
+
+    ICONS = {"经济": "\U0001f4b0", "健康": "\U0001f48a", "科技": "\U0001f680"}
+    TITLES = {"经济": "经济 Economy", "健康": "健康 Health", "科技": "科技 Technology"}
+    grouped: dict[str, list] = {}
+    for n in news:
+        grouped.setdefault(n.get("category", "综合"), []).append(n)
+    news_sections = [{"key": cat, "icon": ICONS.get(cat, "\U0001f4f0"),
+                      "title": TITLES.get(cat, cat), "entries": items}
+                     for cat, items in grouped.items()]
 
     # 2. 从双知识库随机抽 3 条（同一天结果稳定）+ AI 中文翻译
     kb = KnowledgeBase("config.yaml")
@@ -63,6 +72,7 @@ def run(target_date: str | None = None, use_ai: bool = True) -> Path:
     context = {
         "date": day,
         "news": news,
+        "news_sections": news_sections,
         "kb_items": kb_items,
         "vocab": vocab,
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
