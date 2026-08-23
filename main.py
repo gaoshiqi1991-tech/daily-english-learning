@@ -27,7 +27,13 @@ def run(target_date: str | None = None, use_ai: bool = True) -> Path:
     pipe, paths = cfg["pipeline"], cfg["paths"]
     day = target_date or date.today().isoformat()
 
-    ai = AIClient(cfg["openai"]) if use_ai else None
+    ai = None
+    if use_ai:
+        import os
+        if os.environ.get("OPENAI_API_KEY"):
+            ai = AIClient(cfg["openai"])
+        else:
+            print("[main] 警告: 未检测到 OPENAI_API_KEY，降级为无 AI 模式")
 
     # 1. 抓取每日新闻 + AI 摘要
     print(f"[main] 抓取新闻 RSS ...")
