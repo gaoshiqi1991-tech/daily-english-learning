@@ -6,16 +6,20 @@ openai:
   base_url: null                # null 时读取环境变量 OPENAI_BASE_URL（如 https://api.deepseek.com/v1）
   temperature: 0.4
 
-# 每日新闻 RSS 源（权威外刊）
+# 每日新闻 RSS 源（经济 + 健康，权威外刊）
 news_feeds:
-  - name: "BBC World"
-    url: "https://feeds.bbci.co.uk/news/world/rss.xml"
-  - name: "The Guardian World"
-    url: "https://www.theguardian.com/world/rss"
-  - name: "NPR Top Stories"
-    url: "https://feeds.npr.org/1001/rss.xml"
-  - name: "NYT Home Page"
-    url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+  - name: "BBC Business"
+    url: "https://feeds.bbci.co.uk/news/business/rss.xml"
+  - name: "BBC Health"
+    url: "https://feeds.bbci.co.uk/news/health/rss.xml"
+  - name: "The Guardian Business"
+    url: "https://www.theguardian.com/uk/business/rss"
+  - name: "The Guardian Health"
+    url: "https://www.theguardian.com/society/health/rss"
+  - name: "NYT Business"
+    url: "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml"
+  - name: "NPR Health"
+    url: "https://feeds.npr.org/1128/rss.xml"
 
 # 知识库一：最新新闻资讯 / 科学报刊（每周刷新）
 kb_feeds:

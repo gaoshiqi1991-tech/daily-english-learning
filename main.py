@@ -44,10 +44,13 @@ def run(target_date: str | None = None, use_ai: bool = True) -> Path:
         for n in news:
             n["summary"] = ai.summarize_news(n["title"], n["content"])
 
-    # 2. 从双知识库随机抽 3 条（同一天结果稳定）
+    # 2. 从双知识库随机抽 3 条（同一天结果稳定）+ AI 中文翻译
     kb = KnowledgeBase("config.yaml")
     kb_items = kb.get_daily(n=pipe["kb_items_per_day"], date_str=day)
     print(f"[main] 抽取知识 {len(kb_items)} 条（知识库存量 {kb.stats()}）")
+    if ai:
+        for it in kb_items:
+            it["content_cn"] = ai.translate_cn(it["content"])
 
     # 3. AI 生成今日词汇
     vocab = ai.generate_vocab(kb_items, pipe["vocab_count"]) if ai and kb_items else []
