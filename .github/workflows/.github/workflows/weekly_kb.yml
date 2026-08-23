@@ -1,0 +1,37 @@
+name: Weekly KB Refresh
+
+on:
+  schedule:
+    # 每周一 06:17（北京时间）= 周日 22:17 UTC
+    - cron: "17 22 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # 需要把刷新后的知识库提交回仓库
+
+jobs:
+  refresh-kb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Refresh news knowledge base
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+        run: python -m src.kb_updater
+
+      - name: Commit updated knowledge base
+        run: |
+          git config user.name "kb-bot"
+          git config user.email "kb-bot@users.noreply.github.com"
+          git add data/kb_news.json
+          git diff --cached --quiet || git commit -m "chore: weekly KB refresh $(date -u +%F)"
+          git push
