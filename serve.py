@@ -5,13 +5,14 @@
     .venv\Scripts\python serve.py --port 9000
 
 启动后会打印局域网地址，例如：
-    电脑版   http://192.168.1.5:8000/
-    Kindle版 http://192.168.1.5:8000/kindle.html   <-- 在 Kindle 浏览器输入这个
+    电脑版   http://192.168.1.6:8000/
+    Kindle版 http://192.168.1.6:8000/kindle.html   <-- 在 Kindle 浏览器输入这个
 
 注意：
 - 电脑和 Kindle 必须连同一个 Wi-Fi；
 - 首次运行 Windows 防火墙弹窗请选“允许”；
-- 想每天自动更新页面，可用 Windows 任务计划程序定时跑 main.py。
+- 搭配 Windows 计划任务：DailyEnglish-Generate 每天生成页面，
+  DailyEnglish-Server 开机自动启动本服务。
 """
 
 from __future__ import annotations
@@ -36,6 +37,19 @@ def lan_ip() -> str:
         s.close()
 
 
+class QuietHandler(http.server.SimpleHTTPRequestHandler):
+    """pythonw 下 sys.stderr 为 None，默认日志会让每个请求崩溃；
+    改为写日志文件，失败则静默。"""
+
+    def log_message(self, fmt, *args):
+        try:
+            Path("logs").mkdir(exist_ok=True)
+            with open("logs/server.log", "a", encoding="utf-8") as f:
+                f.write("%s - %s\n" % (self.address_string(), fmt % args))
+        except Exception:
+            pass
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8000)
@@ -43,10 +57,7 @@ def main() -> None:
 
     with open("config.yaml", "r", encoding="utf-8") as f:
         out_dir = Path(yaml.safe_load(f)["paths"]["output_dir"])
-    if not (out_dir / "kindle.html").exists():
-        print("[serve] 尚未生成页面，请先运行: python main.py --no-ai")
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler,
-                                directory=str(out_dir))
+    handler = functools.partial(QuietHandler, directory=str(out_dir))
     server = http.server.ThreadingHTTPServer(("0.0.0.0", args.port), handler)
     ip = lan_ip()
     print(f"[serve] 电脑版    http://{ip}:{args.port}/")
